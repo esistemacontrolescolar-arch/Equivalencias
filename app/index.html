@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Predictamen de Equivalencias</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="top no-print">
+  <div class="brand"><span class="logo" id="logo">⇄</span><div><b>Predictamen de Equivalencias</b><small>Sube las materias del alumno y obtén el dictamen</small></div></div>
+  <div class="top-actions">
+    <button class="btn ghost" id="btnHistorial">Expedientes guardados</button>
+    <button class="btn ghost" id="btnNuevo">Nuevo</button>
+  </div>
+</header>
+
+<main class="wrap no-print" id="app">
+
+  <!-- PASO 1 -->
+  <section class="card" id="paso1">
+    <h2><span class="num">1</span> Alumno y carrera destino</h2>
+    <div class="grid">
+      <label>Nombre del aspirante<input id="nombre" placeholder="Ej. Rocío Sánchez Azuara"></label>
+      <label>Tipo de trámite
+        <select id="tramite"><option>Equivalencia</option><option>Reincorporación</option><option>Cambio de Carrera</option></select>
+      </label>
+      <label>Institución de origen<input id="institucion" placeholder="Ej. Universidad Veracruzana"></label>
+      <label>Expediente<input id="expediente"></label>
+    </div>
+    <label class="full">Carrera destino (busca por nombre o RVOE)
+      <input id="buscaPlan" placeholder="Ej. Contaduría mixta, 20232566, Psicología…" autocomplete="off">
+    </label>
+    <div id="listaPlanes" class="plan-list"></div>
+    <div id="planElegido" class="plan-chosen" hidden></div>
+    <div id="sugPlan" class="sug-plan" hidden></div>
+  </section>
+
+  <!-- PASO 2 -->
+  <section class="card" id="paso2">
+    <h2><span class="num">2</span> Materias que ya cursó</h2>
+    <div id="drop" class="drop">
+      <input type="file" id="archivo" accept=".xlsx,.xls,.csv,.pdf,.txt,.png,.jpg,.jpeg,.webp,image/*" multiple hidden>
+      <div class="drop-icon">⬆</div>
+      <b>Arrastra aquí el kárdex o las boletas</b>
+      <span>Puedes soltar varios archivos a la vez · PDF, foto o captura de pantalla, Excel o CSV · o <a href="#" id="elegirArchivo">elige archivos</a></span>
+      <span>Si llegan más boletas después, súbelas también: se suman a las que ya están.</span>
+    </div>
+    <div class="alt-row">
+      <details>
+        <summary>…o pega la lista (una materia por renglón con su calificación)</summary>
+        <textarea id="pegado" rows="6" placeholder="Fundamentos contables 8.5&#10;Derecho mercantil	9&#10;Matemáticas financieras, 7"></textarea>
+        <button class="btn" id="btnPegado">Usar esta lista</button>
+      </details>
+      <details id="detOrigenIUV">
+        <summary>…o viene de otro plan de nuestra institución (reincorporación / cambio de carrera)</summary>
+        <input id="buscaOrigen" placeholder="Busca el plan de origen por nombre o RVOE" autocomplete="off">
+        <div id="listaOrigen" class="plan-list small"></div>
+      </details>
+    </div>
+    <div id="selExpediente" hidden></div>
+    <div class="row-between">
+      <label class="inline">Calificación mínima aprobatoria <input id="minima" type="text" inputmode="decimal" value="6" style="width:5em"></label>
+      <span class="muted" id="conteoOrigen"></span>
+    </div>
+    <div id="tablaOrigen"></div>
+  </section>
+
+  <!-- PASO 3 -->
+  <section class="card" id="paso3" hidden>
+    <h2><span class="num">3</span> Revisión de equivalencias</h2>
+    <div id="analisis" class="analisis" hidden></div>
+    <div id="resultados">
+      <p class="muted">El sistema ya emparejó las materias. Revisa las marcadas en <span class="chip posible">Revisar</span> y cambia lo que haga falta con los botones <b>Elegir materia…</b> y <b>×</b>.</p>
+      <div id="kpis" class="kpis"></div>
+      <div id="revision"></div>
+      <div id="noUsadas"></div>
+    </div>
+  </section>
+
+  <!-- PASO 4 -->
+  <section class="card" id="paso4" hidden>
+    <h2><span class="num">4</span> Dictamen</h2>
+    <div class="grid">
+      <label>Periodo sugerido de ingreso<select id="periodoSug"></select></label>
+      <label>Inicia en<select id="inicio"></select></label>
+    </div>
+    <div class="actions">
+      <button class="btn primary" id="btnImprimir">Imprimir / PDF</button>
+      <button class="btn" id="btnExcel">Descargar Excel</button>
+      <button class="btn" id="btnGuardar">Guardar expediente</button>
+      <button class="btn ghost" id="btnJSON">Exportar JSON (plataforma)</button>
+    </div>
+  </section>
+</main>
+
+<!-- Dictamen imprimible -->
+<section id="dictamen" class="dictamen"></section>
+
+<dialog id="dlgHistorial">
+  <h3>Expedientes guardados</h3>
+  <div id="histLista"></div>
+  <div class="actions"><button class="btn" id="btnImportJSON">Importar JSON</button><input type="file" id="fileJSON" accept=".json" hidden><button class="btn ghost" onclick="this.closest('dialog').close()">Cerrar</button></div>
+</dialog>
+
+<div id="toast" class="toast"></div>
+
+<script src="data/planes.js"></script>
+<script src="vendor/xlsx.full.min.js"></script>
+<script src="vendor/pdf.min.js"></script>
+<script src="vendor/pdf.worker.min.js"></script>
+<script src="vendor/ocr/tesseract.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
